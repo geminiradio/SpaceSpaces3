@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{8DDF63B1-3A4F-7667-F1E6-26D6AB17155F}</ProjectGuid>
+    <ProjectGuid>{54F20C55-8113-D717-5683-C8924FAE4018}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\CodeTools.cs" />
      <Compile Include="Assets\Scripts\FlyBy.cs" />
      <Compile Include="Assets\Scripts\GlowRock.cs" />
+     <Compile Include="Assets\Scripts\PFXOnCollision.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_LaserPointer.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_Teleporter.cs" />
@@ -107,7 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{00D1489C-A244-24A1-6552-6DF113691854}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{470EFC0B-4327-863F-421C-C4CB2335CFF6}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
