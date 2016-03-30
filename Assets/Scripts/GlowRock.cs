@@ -10,10 +10,20 @@ public class GlowRock : MonoBehaviour {
 	public GlowRock manager;
 
 	// this set only for manager
+	public float timeBeforeEmerge = 55f;  // how many seconds before the glowing rocks appear
+	public float emergeDuration = 5f;  // how long does it take the glowing rocks to fade into existence
+	private bool emergingStarted = false;
+	private Interpolator2D interp_emerge;
+	private Interpolator2D interp_emergeSfx;
+	private float emergeSfxDuration = 3f;
+	public AudioSource emergeSfx;
 	public GlowRock[] allRocks;  // only for manager, list of all rocks
 	private bool allRocksTriggered = false;  // only for manager
 	public float allRocksTriggeredDuration = 60f; // only for manager
 	private float untriggerAllRocksTime; // only for manager
+
+	private static bool emergingComplete = false;
+
 
 	public Renderer myRend;
 	public Light myLight;
@@ -30,6 +40,10 @@ public class GlowRock : MonoBehaviour {
 	public float darkenDuration = 7f;   // stage 3
 
 	private float minMagToTrigger = 5f; // magnitude of relative velocity of collision
+
+	private Vector3 originalScale;
+
+	public GameObject intelligentSphere;
 
 	private enum GlowStage : int {
 		Inactive,
@@ -66,14 +80,119 @@ public class GlowRock : MonoBehaviour {
 		if ((manager == this) && (allRocks.Length <= 0))
 			Debug.LogError(this+ " is the manager, but allRocks array not assigned correctly!");
 
+		if (intelligentSphere == null)
+			Debug.LogError(this+" intelligentSphere not assigned correctly!");
+		
+
 		interp_emis = new Interpolator2D();
 		interp_light = new Interpolator2D();
+		interp_emerge = new Interpolator2D();
+		interp_emergeSfx = new Interpolator2D();
 
 		myRend.material.EnableKeyword("_EmissionColor");
+
+		// all glowrocks start tiny and fully turned off other than manager
+		originalScale = transform.localScale;
+		Vector3 verySmall = new Vector3 (0.00001f, 0.00001f, 0.00001f);
+		transform.localScale = verySmall;
+		TurnStuffOnOff(false);
+		if (manager != this)
+			gameObject.SetActive(false);
+
 	}
 
 
 	void Update () {
+
+		// no glow rocks exist in the scene yet
+		if ((manager == this) && (Time.time < timeBeforeEmerge))
+			return;
+
+		// if emerging isn't finished and you're not a manager, leave now
+		if ((manager != this) && (!emergingComplete))
+			return;
+
+		// kick off the emerge behavior
+		if ((manager == this) && (Time.time >= emergeDuration) && (!emergingStarted))
+		{
+			emergingStarted = true;
+
+			// TODO - this is a 2dinterpolator being used as a 1dinterpoolator
+			interp_emerge.Initialize(new Vector2(0f,0f), new Vector2(1f,0f), emergeDuration);
+			interp_emergeSfx.Initialize(new Vector2(0f,0f), new Vector2(0.05f,0f), emergeSfxDuration); // hardcoded from vol 0 to vol 0.05
+
+			// enable all glow rocks and turn on all glow rock's render and collider meshes (only)
+			MeshRenderer myRend = GetComponent<MeshRenderer>();
+			myRend.enabled = true;
+			MeshCollider myCol = GetComponent<MeshCollider>();
+			myCol.enabled = true;
+			for (int i=0; i<allRocks.Length; i++)
+			{
+				allRocks[i].gameObject.SetActive(true);
+				MeshRenderer rend = allRocks[i].GetComponent<MeshRenderer>();
+				rend.enabled = true;
+
+				MeshCollider col = allRocks[i].GetComponent<MeshCollider>();
+				col.enabled = true;
+			}
+
+			return;
+		}
+
+		// continue the emerge behavior
+		if ((manager == this) && (emergingStarted) && (!emergingComplete))
+		{
+			// sfx first
+			if (emergeSfx != null)
+			{
+				emergeSfx.volume = interp_emergeSfx.Update().x;
+			}
+				
+			// scale all the glow rocks with the interpolator, up to their stored originalScale
+			Vector2 vec = interp_emerge.Update();
+			float newScaleMag = vec.x;
+
+			for (int i=0; i<allRocks.Length; i++)
+			{
+				Vector3 newScale = new Vector3 (newScaleMag * allRocks[i].originalScale.x,newScaleMag * allRocks[i].originalScale.y,newScaleMag * allRocks[i].originalScale.z);
+				allRocks[i].transform.localScale = newScale;
+			}
+
+			// manager too
+			Vector3 myNewScale = new Vector3 (newScaleMag*originalScale.x,newScaleMag*originalScale.y,newScaleMag*originalScale.z);
+			transform.localScale = myNewScale;
+
+		
+			// check to see if emerging is complete yet
+			if (interp_emerge.complete)
+			{
+				emergingComplete = true;
+				TurnStuffOnOff(true);
+				for (int i=0; i<allRocks.Length; i++)
+					allRocks[i].TurnStuffOnOff(true);
+			}
+
+
+			return;
+		}
+
+
+		// if the code gets this far, the emerging process is complete
+		if (!emergingComplete)
+			Debug.LogError("emerging should be complete by now");
+
+		// LERP the sfx out.  this is crappy but whatever
+		if ((manager == this) && (emergeSfx != null))
+		{
+			float percent = (Time.time - emergeDuration - timeBeforeEmerge) / (emergeSfxDuration);
+
+			if (percent > 1f)
+				percent = 1f;
+			percent = 1-percent;
+
+			emergeSfx.volume = (0.05f * percent);
+		}
+			
 
 		// put the light directly above the rock in world space, regardless of how the rock moves or rotates
 		myLight.transform.position = transform.position + new Vector3(0f, myLightHeight, 0f);
@@ -226,7 +345,34 @@ public class GlowRock : MonoBehaviour {
 		if (collision.relativeVelocity.magnitude > minMagToTrigger)
 		{
 			triggered = true;
+
+			if (collision.collider.gameObject.name == "NearestObelisk")
+			{
+				Animator anim = intelligentSphere.GetComponent<Animator>();
+				anim.SetTrigger("ApproachPlayer");
+
+				Obelisk ob = collision.collider.gameObject.GetComponent<Obelisk>();
+				ob.IveBeenHit();
+			}
+				
 		}
+
+	}
+
+
+	void TurnStuffOnOff (bool onoroff)
+	{
+		VRInteractable vrscript = GetComponent<VRInteractable>();
+		vrscript.enabled = onoroff;
+
+		MeshCollider collid = GetComponent<MeshCollider>();
+		collid.enabled = onoroff;
+
+		Rigidbody rig = GetComponent<Rigidbody>();
+		rig.isKinematic = !onoroff;
+
+		MeshRenderer rend = GetComponent<MeshRenderer>();
+		rend.enabled = onoroff;
 
 	}
 

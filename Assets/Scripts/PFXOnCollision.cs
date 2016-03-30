@@ -4,6 +4,7 @@ using System.Collections;
 public class PFXOnCollision : MonoBehaviour {
 
 	public ParticleSystem myParticleSystem;
+	public GameObject mustCollideWith;   // if not null, must collide with this to produce a particle fx
 	public bool reuse = false; // if this is false, clone myParticleSystem rather than reuse it (ie - false = it's a prefab) 
 	public float minCollisionMag = 1f;  // ignore collisions below this
 	public float normalCollsionMag = 5f;
@@ -28,6 +29,12 @@ public class PFXOnCollision : MonoBehaviour {
 		if (Time.time < veryEarlyInTheGame)
 			return;
 
+		if ( (mustCollideWith != null) && (collision.collider.gameObject != mustCollideWith) )
+		{
+			Debug.Log("collided with the wrong thing, specifically: "+collision.collider.gameObject);
+			return;
+		}
+
 		Debug.Log("collided with relativeVelocity "+collision.relativeVelocity.magnitude);
 
 		if (collision.relativeVelocity.magnitude > minCollisionMag)
@@ -50,6 +57,7 @@ public class PFXOnCollision : MonoBehaviour {
 			{
 				Quaternion rot = myParticleSystem.transform.rotation;
 				ParticleSystem newPart = (ParticleSystem) Instantiate(myParticleSystem, collision.contacts[0].point, rot) as ParticleSystem;
+				newPart.transform.parent = null;
 				newPart.startSpeed = newStartSpeed;
 				newPart.Play();
 			}
