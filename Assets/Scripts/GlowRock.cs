@@ -9,6 +9,7 @@ public class GlowRock : MonoBehaviour {
 	private bool everTriggered = false;
 	public GlowRock manager;
 
+	// this set only for manager
 	public GlowRock[] allRocks;  // only for manager, list of all rocks
 	private bool allRocksTriggered = false;  // only for manager
 	public float allRocksTriggeredDuration = 60f; // only for manager
@@ -16,6 +17,7 @@ public class GlowRock : MonoBehaviour {
 
 	public Renderer myRend;
 	public Light myLight;
+	public float myLightHeight = 0.2f;  // how high above the rock should the light be?
 
 	public float emisLow = 0.08f;
 	public float emisHigh = 1f;
@@ -72,6 +74,9 @@ public class GlowRock : MonoBehaviour {
 
 
 	void Update () {
+
+		// put the light directly above the rock in world space, regardless of how the rock moves or rotates
+		myLight.transform.position = transform.position + new Vector3(0f, myLightHeight, 0f);
 
 		// if i'm the manager and it's time to do so, tell all the other rocks to stop auto-triggering after this next one
 		if ( (manager == this) && (Time.time > untriggerAllRocksTime))
