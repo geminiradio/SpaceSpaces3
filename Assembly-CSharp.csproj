@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CodeTools.cs" />
+     <Compile Include="Assets\Scripts\FadeInAndOut.cs" />
      <Compile Include="Assets\Scripts\FlyBy.cs" />
      <Compile Include="Assets\Scripts\GlowRock.cs" />
      <Compile Include="Assets\Scripts\PFXOnCollision.cs" />

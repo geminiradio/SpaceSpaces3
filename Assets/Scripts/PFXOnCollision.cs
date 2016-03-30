@@ -4,9 +4,13 @@ using System.Collections;
 public class PFXOnCollision : MonoBehaviour {
 
 	public ParticleSystem myParticleSystem;
-	public float minCollisionMag = 1f;
+	public bool reuse = false; // if this is false, clone myParticleSystem rather than reuse it (ie - false = it's a prefab) 
+	public float minCollisionMag = 1f;  // ignore collisions below this
 	public float normalCollsionMag = 5f;
 	public float multDampener = 1f; // set this to 1 for no effect
+	public float multScale = 1f;  // this allows the user to scale the size of the pfx after all calculations
+
+	private float veryEarlyInTheGame = 2f; // ignore collisions that happen this many seconds in the beginning of the game
 
 	private float originalStartSpeed;
 
@@ -21,6 +25,9 @@ public class PFXOnCollision : MonoBehaviour {
 
 	void OnCollisionEnter (Collision collision)
 	{
+		if (Time.time < veryEarlyInTheGame)
+			return;
+
 		Debug.Log("collided with relativeVelocity "+collision.relativeVelocity.magnitude);
 
 		if (collision.relativeVelocity.magnitude > minCollisionMag)
@@ -29,12 +36,23 @@ public class PFXOnCollision : MonoBehaviour {
 			float diff = mult - 1f;
 			mult = 1f + (diff * multDampener);
 
-			Debug.Log("mult = "+mult);
+			Debug.Log("dampened mult = "+mult);
 
-			myParticleSystem.startSpeed = originalStartSpeed * mult;
-			Debug.Log("myParticleSystem.startSpeed = "+myParticleSystem.startSpeed);
+			float newStartSpeed = originalStartSpeed * mult * multScale;
+			Debug.Log("newStartSpeed = "+newStartSpeed);
 
-			myParticleSystem.Play();
+			if (reuse)
+			{
+				myParticleSystem.startSpeed = newStartSpeed;
+				myParticleSystem.Play();
+			}
+			else
+			{
+				Quaternion rot = myParticleSystem.transform.rotation;
+				ParticleSystem newPart = (ParticleSystem) Instantiate(myParticleSystem, collision.contacts[0].point, rot) as ParticleSystem;
+				newPart.startSpeed = newStartSpeed;
+				newPart.Play();
+			}
 		}
 
 	}
