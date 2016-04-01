@@ -29,6 +29,7 @@ public class GlowRock : MonoBehaviour {
 	public Light myLight;
 	public float myLightHeight = 0.2f;  // how high above the rock should the light be?
 
+	public AudioSource glowTriggerSound;
 	public float emisLow = 0.08f;
 	public float emisHigh = 1f;
 	public float lightIntensityLow = 0.01f;
@@ -82,7 +83,10 @@ public class GlowRock : MonoBehaviour {
 
 		if (intelligentSphere == null)
 			Debug.LogError(this+" intelligentSphere not assigned correctly!");
-		
+
+		if (glowTriggerSound == null)
+			Debug.LogError("glowTriggerSound not assigned correctly!");
+
 
 		interp_emis = new Interpolator2D();
 		interp_light = new Interpolator2D();
@@ -290,6 +294,8 @@ public class GlowRock : MonoBehaviour {
 			FirstTimeTriggered();
 
 		triggered = false;
+
+		glowTriggerSound.PlayOneShot(glowTriggerSound.clip);
 
 		glowStage = GlowStage.Brighten;
 

@@ -51,22 +51,26 @@
      <Compile Include="Assets\Scripts\SteamVR\Editor\SteamVR_Settings.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Editor\SteamVR_SkyboxEditor.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Editor\SteamVR_Update.cs" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\shader info.txt" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Fade.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_BlitFlip.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_ClearAll.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_HiddenArea.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+     <None Include="Assets\Rocks and Boulders 2\readme.txt" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Overlay.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
      <None Include="Assets\sky5X\README.txt" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Blit.shader" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM3.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_AlphaOut.shader" />
      <None Include="Assets\Scripts\SteamVR\readme.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_ColorOut.shader" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM2.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity_532/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
