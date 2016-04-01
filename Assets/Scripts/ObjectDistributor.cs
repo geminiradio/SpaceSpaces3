@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 
 public class ObjectDistributor : MonoBehaviour {
 
-	public bool triggerBehavior = false;
+	public bool triggerDistribute = false;
 	public GameObject toDistribute;
 	public int numToDistribute;
 	public float xMin, xMax, yMin, yMax, zMin, zMax;
@@ -13,21 +13,34 @@ public class ObjectDistributor : MonoBehaviour {
 
 	public GameObject[] distributedObjects;
 
+    public bool triggerStore = false; // toggle this in game mode to copy transforms from toStore to storedTransforms
+    public GameObject[] toStoreOrCopy; // assign this in editor
+    public Transform[] storedTransforms; // these get stored
+    public bool triggerCopy = false; // toggle this in editor to copy transforms from storedTransforms to toStoreOrCopy
+
 	void Start ()
 	{
 		distributedObjects = new GameObject[200];
+        storedTransforms = new Transform[200];
 
-	}
+    }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 
-		if (triggerBehavior)
+		if (triggerDistribute)
 		{
-			triggerBehavior = false;
+			triggerDistribute = false;
 			RemoveAllOldObjects();
 			DistributeObjects();
 		}
+
+        if (triggerStore)
+        {
+            triggerStore = false;
+            for (int i = 0; i < toStoreOrCopy.Length; i++)
+                storedTransforms[i] = toStoreOrCopy[i].transform;
+        }
 	
 	}
 
