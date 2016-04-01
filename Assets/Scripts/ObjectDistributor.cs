@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//[ExecuteInEditMode]
+[ExecuteInEditMode]
 
 public class ObjectDistributor : MonoBehaviour {
 
@@ -15,13 +15,20 @@ public class ObjectDistributor : MonoBehaviour {
 
     public bool triggerStore = false; // toggle this in game mode to copy transforms from toStore to storedTransforms
     public GameObject[] toStoreOrCopy; // assign this in editor
-    public Transform[] storedTransforms; // these get stored
+	public Vector3[] storedPositions; // these get stored
+	public Vector3[] storedRotations; // these get stored
     public bool triggerCopy = false; // toggle this in editor to copy transforms from storedTransforms to toStoreOrCopy
+
+	public bool triggerReplace = false;
+	public GameObject[] toReplace;  // assign in edito
+	public GameObject[] replaceWith;  // it picks from this array at random to replace
+
 
 	void Start ()
 	{
 		distributedObjects = new GameObject[200];
-        storedTransforms = new Transform[200];
+		storedPositions = new Vector3[200];
+		storedRotations = new Vector3[200];
 
     }
 
@@ -39,8 +46,73 @@ public class ObjectDistributor : MonoBehaviour {
         {
             triggerStore = false;
             for (int i = 0; i < toStoreOrCopy.Length; i++)
-                storedTransforms[i] = toStoreOrCopy[i].transform;
+			{
+				storedPositions[i].x = toStoreOrCopy[i].transform.position.x;
+				storedPositions[i].y = toStoreOrCopy[i].transform.position.y;
+				storedPositions[i].z = toStoreOrCopy[i].transform.position.z;
+
+				storedRotations[i].x = toStoreOrCopy[i].transform.rotation.x;
+				storedRotations[i].y = toStoreOrCopy[i].transform.rotation.y;
+				storedRotations[i].z = toStoreOrCopy[i].transform.rotation.z;
+			}
         }
+
+		if (triggerCopy)
+		{
+			triggerCopy = false;
+
+			Vector3 newpos, newrot;
+			newpos = new Vector3();
+			newrot = new Vector3();
+
+			for (int i = 0; i < toStoreOrCopy.Length; i++)
+			{
+				newpos.x = storedPositions[i].x;
+				newpos.y = storedPositions[i].y;
+				newpos.z = storedPositions[i].z;
+				toStoreOrCopy[i].transform.position = newpos;
+
+				newrot.x = storedRotations[i].x;
+				newrot.y = storedRotations[i].y;
+				newrot.z = storedRotations[i].z;
+				toStoreOrCopy[i].transform.rotation = Quaternion.Euler(newrot);
+
+			}
+
+
+		}
+
+
+		if (triggerReplace)
+		{
+			triggerReplace = false;
+
+			Vector3 replacePos, replaceRot;
+			replacePos = new Vector3();
+			replaceRot = new Vector3();
+
+			//GameObject replacement;
+
+			for (int i = 0; i < toReplace.Length; i++)
+			{
+				// copy data from the object we are going to replace
+				replacePos.x = toReplace[i].transform.position.x;
+				replacePos.y = toReplace[i].transform.position.y;
+				replacePos.z = toReplace[i].transform.position.z;
+
+				replaceRot.x = toReplace[i].transform.rotation.x;
+				replaceRot.y = toReplace[i].transform.rotation.y;
+				replaceRot.z = toReplace[i].transform.rotation.z;
+
+				// pick the object we are going to clone
+				// below is commented out to avoid warnings
+				//replacement = replaceWith[Random.Range(0,replaceWith.Length)];
+				//GameObject clone = (GameObject)Instantiate(replacement,replacePos,Quaternion.Euler(replaceRot)) as GameObject;
+
+			}
+
+		}
+
 	
 	}
 

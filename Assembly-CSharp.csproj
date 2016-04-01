@@ -48,10 +48,12 @@
      <Compile Include="Assets\Scripts\CodeTools.cs" />
      <Compile Include="Assets\Scripts\FadeInAndOut.cs" />
      <Compile Include="Assets\Scripts\FlyBy.cs" />
+     <Compile Include="Assets\Scripts\FlyingPlayer.cs" />
      <Compile Include="Assets\Scripts\GlowRock.cs" />
      <Compile Include="Assets\Scripts\Obelisk.cs" />
      <Compile Include="Assets\Scripts\ObjectDistributor.cs" />
      <Compile Include="Assets\Scripts\PFXOnCollision.cs" />
+     <Compile Include="Assets\Scripts\SFXOnCollide.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_LaserPointer.cs" />
      <Compile Include="Assets\Scripts\SteamVR\Extras\SteamVR_Teleporter.cs" />
@@ -86,22 +88,26 @@
      <Compile Include="Assets\Scripts\TriggerApproach.cs" />
      <Compile Include="Assets\Scripts\VRInteractable.cs" />
      <Compile Include="Assets\Scripts\WandController.cs" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\shader info.txt" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Fade.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_BlitFlip.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_ClearAll.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_HiddenArea.shader" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+     <None Include="Assets\Rocks and Boulders 2\readme.txt" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Overlay.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
      <None Include="Assets\sky5X\README.txt" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Blit.shader" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM3.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_AlphaOut.shader" />
      <None Include="Assets\Scripts\SteamVR\readme.txt" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
      <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_ColorOut.shader" />
+     <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM2.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity_532/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
