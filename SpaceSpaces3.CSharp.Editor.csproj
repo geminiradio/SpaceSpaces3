@@ -135,6 +135,10 @@
     <Compile Include="Assets\Scripts\SteamVR\Editor\SteamVR_Update.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM2.shader" />
+    <None Include="Assets\Rocks and Boulders 2\Shaders\Blend SM3.shader" />
+    <None Include="Assets\Rocks and Boulders 2\Shaders\shader info.txt" />
+    <None Include="Assets\Rocks and Boulders 2\readme.txt" />
     <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_AlphaOut.shader" />
     <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_Blit.shader" />
     <None Include="Assets\Scripts\SteamVR\Resources\SteamVR_BlitFlip.shader" />

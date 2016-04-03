@@ -6,7 +6,6 @@ using System.Collections;
 public class GlowRock : MonoBehaviour {
 
 	public bool triggered = false;
-	private bool everTriggered = false;
 	public GlowRock manager;
 
 	// this set only for manager
@@ -108,16 +107,16 @@ public class GlowRock : MonoBehaviour {
 
 	void Update () {
 
-		// no glow rocks exist in the scene yet
-		if ((manager == this) && (Time.time < timeBeforeEmerge))
-			return;
+        // if emerging isn't finished and you're not a manager, leave now
+        if ((manager != this) && (!emergingComplete))
+            return;
 
-		// if emerging isn't finished and you're not a manager, leave now
-		if ((manager != this) && (!emergingComplete))
+        // no glow rocks exist in the scene yet
+        if ((manager == this) && (Time.time < timeBeforeEmerge))
 			return;
 
 		// kick off the emerge behavior
-		if ((manager == this) && (Time.time >= emergeDuration) && (!emergingStarted))
+		if ((manager == this) && (Time.time >= timeBeforeEmerge) && (!emergingStarted))
 		{
 			emergingStarted = true;
 
@@ -176,14 +175,20 @@ public class GlowRock : MonoBehaviour {
 					allRocks[i].TurnStuffOnOff(true);
 			}
 
-
 			return;
 		}
 
 
-		// if the code gets this far, the emerging process is complete
-		if (!emergingComplete)
-			Debug.LogError("emerging should be complete by now");
+        // if the code gets this far, the emerging process is complete
+        if ((!emergingComplete) && ((Time.frameCount % 10) == 0))
+        {
+            Debug.LogError("emerging should be complete by now");
+            if (manager == this)
+                Debug.Log("I AM the manager.");
+            else
+                Debug.Log("I am NOT the manager.");
+        }
+
 
 		// LERP the sfx out.  this is crappy but whatever
 		if ((manager == this) && (emergeSfx != null))
@@ -207,6 +212,8 @@ public class GlowRock : MonoBehaviour {
 			allRocksTriggered = false;
 			foreach (GlowRock rock in allRocks)
 				rock.autoTrigEnabled = false;
+
+            autoTrigEnabled = false; // manager too
 		}
 
 
@@ -250,7 +257,7 @@ public class GlowRock : MonoBehaviour {
 					myRend.material.SetColor("_EmissionColor",new Color(emisLow, emisLow, emisLow));
 					myLight.intensity = lightIntensityLow;
 
-					if (autoTrigEnabled)
+					if (autoTrigEnabled) 
 						InitAutoTrigger();
 				}
 					
@@ -290,8 +297,8 @@ public class GlowRock : MonoBehaviour {
 
 	private void Trigger (bool autoTrigger)
 	{
-		if (!everTriggered)
-			FirstTimeTriggered();
+        if (!autoTrigger) 
+            manager.TriggerAllOtherRocks();
 
 		triggered = false;
 
@@ -313,40 +320,41 @@ public class GlowRock : MonoBehaviour {
 		}
 	}
 
-	private void FirstTimeTriggered ()
-	{
-		everTriggered = true;
-		autoTrigEnabled = true;
-
-		manager.TriggerAllOtherRocks();
-	}
 
 	// manager only
 	public void TriggerAllOtherRocks ()
 	{
-		// even if all rocks are triggered, reset the timer
-		untriggerAllRocksTime = Time.time + allRocksTriggeredDuration;
+        // OLD -  even if all rocks are triggered, reset the timer
+		//untriggerAllRocksTime = Time.time + allRocksTriggeredDuration;
 
 		if (allRocksTriggered)
 			return;
 
-		allRocksTriggered = true;
+        allRocksTriggered = true;
+
+        // NEW - the timer only gets set the first time the rocks are triggered - ie - the timer must expire before it gets reset
+        untriggerAllRocksTime = Time.time + allRocksTriggeredDuration;
 
 		// trigger all the other rocks
 		foreach (GlowRock rock in allRocks)
 			rock.InitAutoTrigger();
 
+        InitAutoTrigger();  // manager needs to auto-trigger self, too, if it wasn't the one originally triggered
 	}
 
 	// auto trigger = trigger self after a delay
 	public void InitAutoTrigger()
 	{
 		autoTrigEnabled = true;
-		nextAutoTrigger = Time.time + Random.Range(autoTrigMinTime,autoTrigMaxTime) + brightenDurationAuto + glowDuration + darkenDuration;
-	}
+        // OLD - wait for first rock to complete its entire process before triggering self
+        //nextAutoTrigger = Time.time + Random.Range(autoTrigMinTime,autoTrigMaxTime) + brightenDurationAuto + glowDuration + darkenDuration;
+
+        // NEW - trigger self as early as the first rock being 1/2 way into its process
+        nextAutoTrigger = Time.time + Random.Range(autoTrigMinTime, autoTrigMaxTime) + ((brightenDurationAuto + glowDuration + darkenDuration) / 2);
+    }
 
 
-	void OnCollisionEnter (Collision collision)
+    void OnCollisionEnter (Collision collision)
 	{
 		if (collision.relativeVelocity.magnitude > minMagToTrigger)
 		{
