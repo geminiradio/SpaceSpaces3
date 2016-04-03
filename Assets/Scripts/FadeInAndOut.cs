@@ -3,7 +3,11 @@ using System.Collections;
 
 public class FadeInAndOut : MonoBehaviour {
 
-	public float fadeInTime = 3f;
+    public GameObject cameraToFollow;
+    public Vector3 cameraPosOffset;
+ //   public Vector3 cameraRotOffset;
+
+    public float fadeInTime = 3f;
 	public float fadeOutTime = 10f;
 
 	public bool triggerFadeOut = false;
@@ -27,10 +31,20 @@ public class FadeInAndOut : MonoBehaviour {
 		fadingIn = true;
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+    // Update is called once per frame
+    void Update() {
+
+        //update position to follow camera
+        if (cameraToFollow != null)
+        {
+            if (cameraPosOffset != null)
+                transform.position = cameraToFollow.transform.position + cameraPosOffset;
+
+//            if (cameraRotOffset != null)
+//                transform.rotation = cameraToFollow.transform.rotation + cameraRotOffset;
+        }
+
 		if (fadingIn)
 		{
 			Vector2 newAlpha = interp.Update();

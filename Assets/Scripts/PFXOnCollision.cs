@@ -35,7 +35,7 @@ public class PFXOnCollision : MonoBehaviour {
 			return;
 		}
 
-		Debug.Log("collided with relativeVelocity "+collision.relativeVelocity.magnitude);
+	//Debug.Log("collided with relativeVelocity "+collision.relativeVelocity.magnitude);
 
 		if (collision.relativeVelocity.magnitude > minCollisionMag)
 		{
@@ -43,10 +43,10 @@ public class PFXOnCollision : MonoBehaviour {
 			float diff = mult - 1f;
 			mult = 1f + (diff * multDampener);
 
-			Debug.Log("dampened mult = "+mult);
+			//Debug.Log("dampened mult = "+mult);
 
 			float newStartSpeed = originalStartSpeed * mult * multScale;
-			Debug.Log("newStartSpeed = "+newStartSpeed);
+			//Debug.Log("newStartSpeed = "+newStartSpeed);
 
 			if (reuse)
 			{

@@ -66,7 +66,8 @@ public class WandController : MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log("WandController collided with a non-VRInteractable object, so ignoring it; it's "+newInteractable.gameObject);
+            if (newInteractable.gameObject != null)
+    			Debug.Log("WandController collided with a non-VRInteractable object, so ignoring it; it's "+newInteractable.gameObject);
 		}
 			
 	}
